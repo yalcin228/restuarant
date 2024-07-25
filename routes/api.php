@@ -39,6 +39,7 @@ Route::middleware(['auth:sanctum', 'role:admin', 'check.end_date'])->group(funct
     //Stok ve Grup tanimlari
     Route::apiResource('menus', MenuController::class);
     Route::apiResource('menu-items', MenuItemController::class);
+    Route::post('menu-items/{id}/update', [MenuItemController::class, 'updateItem']);
 
 
     //Masa tanimlari

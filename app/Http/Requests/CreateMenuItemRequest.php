@@ -24,7 +24,8 @@ class CreateMenuItemRequest extends FormRequest
         return [
             'name'              => 'required|string|max:255',
             'price'             => 'required|numeric|min:0',
-            'stock'             => 'required|integer|min:0',
+            'is_stock'          => 'required|in:1,2',
+            'stock'             => 'required_if:is_stock,1|integer|min:0',
             'type'              => 'required|integer|in:1,2',
             'stock_tracking'    => 'required|in:1,2',
             'ordinal_number'    => 'required|integer|min:1',

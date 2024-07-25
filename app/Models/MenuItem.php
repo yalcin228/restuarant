@@ -18,6 +18,7 @@ class MenuItem extends Model
         'menu_id', 
         'type', 
         'stock_tracking', 
+        'is_stock',
         'ordinal_number', 
         'order_start_time', 
         'order_end_time'
