@@ -9,6 +9,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\StaffController;
 
@@ -36,7 +37,8 @@ Route::middleware(['auth:sanctum', 'role:super-admin'])->group(function () {
 
 Route::middleware(['auth:sanctum', 'role:admin', 'check.end_date'])->group(function () {
     //Stok ve Grup tanimlari
-    
+    Route::apiResource('menus', MenuController::class);
+    Route::apiResource('menu-items', MenuItemController::class);
 
 
     //Masa tanimlari

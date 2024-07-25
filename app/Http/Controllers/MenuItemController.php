@@ -2,27 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateMenuItemRequest;
+use App\Http\Traits\ApiResponserTrait;
 use Illuminate\Http\Request;
 use App\Models\MenuItem;
 
 class MenuItemController extends Controller
 {
-    //
+    use ApiResponserTrait;
     public function index()
     {
-        return MenuItem::all();
+        $items =  MenuItem::select()
+                        ->orderBy('ordinal_number')
+                        ->get();
+
+        return $this->successResponse($items,200);
     }
 
-    public function store(Request $request)
+    public function store(CreateMenuItemRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'category_id' => 'required|exists:categories,id',
-            'restaurant_id' => 'required|exists:restaurants,id',
-        ]);
+        $data = $request->validated();
 
-        $menuItem = MenuItem::create($request->all());
+        $menuItem = MenuItem::create();
 
         return response()->json($menuItem, 201);
     }

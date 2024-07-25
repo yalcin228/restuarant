@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->foreignId('restaurant_id')->constrained()->onDelete('cascade');
             $table->tinyInteger('type')->default(1)->comment('1:qr menu-da gosterilecek, 2:qr menu-da gosterilmeyecek');
-            $table->tinyInteger('print')->default(null)->comment("1:Mutfak yaziciya yonlecek, 2:Bar yaziciya yonlenecek");
+            $table->tinyInteger('print')->default(null)->nullable()->comment("1:Mutfak yaziciya yonlecek, 2:Bar yaziciya yonlenecek");
             $table->integer('ordinal_number')->default(1);
             $table->timestamps();
             $table->softDeletes();
