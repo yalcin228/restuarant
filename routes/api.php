@@ -36,6 +36,7 @@ Route::middleware(['auth:sanctum', 'role:super-admin'])->group(function () {
 
 Route::middleware(['auth:sanctum', 'role:admin', 'check.end_date'])->group(function () {
     //Stok ve Grup tanimlari
+    
 
 
     //Masa tanimlari
