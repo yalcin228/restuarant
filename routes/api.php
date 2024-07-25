@@ -40,7 +40,10 @@ Route::middleware(['auth:sanctum', 'role:admin', 'check.end_date'])->group(funct
     Route::apiResource('menus', MenuController::class);
     Route::apiResource('menu-items', MenuItemController::class);
     Route::post('menu-items/{id}/update', [MenuItemController::class, 'updateItem']);
-
+    Route::post('menu-items/{id}/update-stock', [MenuItemController::class, 'updateStock']);
+    Route::post('menu-items/{id}/update-price', [MenuItemController::class, 'updatePrice']);
+    Route::post('menu-items/{id}/update-type', [MenuItemController::class, 'updateType']);
+    
 
     //Masa tanimlari
     Route::get('categories', [TableController::class, 'getCategories']);

@@ -28,4 +28,9 @@ class MenuItem extends Model
     {
         return $this->belongsTo(Menu::class);
     }
+
+    public function stockHistories()
+    {
+        return $this->hasMany(MenuItemStockHistory::class);
+    }
 }

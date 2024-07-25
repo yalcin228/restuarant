@@ -93,7 +93,7 @@ class MenuItemController extends Controller
                         'menu_item_id' => $item->id,
                         'type' => 2,
                         'quantity' => $past_stock_count - $data['stock'],
-                        'note' => ($past_stock_count - $data['stock'])." Adet stok miktar cikisi"
+                        'note' => ($past_stock_count - $data['stock'])." Adet stok miktar çıkışı"
                     ]);
                 }
             }else{
@@ -106,10 +106,73 @@ class MenuItemController extends Controller
         }
     }
 
-    public function destroy(MenuItem $menuItem)
+    public function destroy($id)
     {
-        $menuItem->delete();
+        $item = MenuItem::findOrFail($id);
+        $item->stockHistories()->delete();
+        $item->delete();
 
-        return response()->json(null, 204);
+        return $this->successResponse('Menu item deleted',200);
+    }
+
+    public function updateStock(Request $request, $id)
+    {   
+        $request->validate([
+            'stock' => 'required|integer|min:0',
+        ]);
+
+        $item = MenuItem::findOrFail($id);
+
+        $past_stock_count = $item->stock;
+
+        $item->update([
+            'stock' => $request->stock
+        ]);
+
+        if ($request->stock > $past_stock_count) {
+            MenuItemStockHistory::create([
+                'menu_item_id' => $item->id,
+                'type' => 1,
+                'quantity' => $request->stock - $past_stock_count,
+                'note' => ($request->stock - $past_stock_count)." Adet stok miktar girişi"
+            ]);
+        } else if ($request->stock < $past_stock_count) {
+            MenuItemStockHistory::create([
+                'menu_item_id' => $item->id,
+                'type' => 2,
+                'quantity' => $past_stock_count - $request->stock,
+                'note' => ($past_stock_count - $request->stock)." Adet stok miktar çıkışı"
+            ]);
+        }
+
+        return $this->successResponse('Menu item stock updated',200);
+    }
+
+    public function updatePrice(Request $request, $id)
+    {   
+        $request->validate([
+            'price' => 'required|integer|min:0',
+        ]);
+
+        $item = MenuItem::findOrFail($id);
+        $item->update([
+            'price' => $request->price
+        ]);
+   
+        return $this->successResponse('Menu item price updated',200);
+    }
+
+    public function updateType(Request $request, $id)
+    {   
+        $request->validate([
+            'type' => 'required|integer|in:1,2',
+        ]);
+
+        $item = MenuItem::findOrFail($id);
+        $item->update([
+            'type' => $request->type
+        ]);
+   
+        return $this->successResponse('Menu item type updated',200);
     }
 }
