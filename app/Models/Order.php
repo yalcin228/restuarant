@@ -9,7 +9,7 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['table_id', 'restaurant_id', 'status'];
+    protected $fillable = ['table_id','customer_id', 'restaurant_id','total_price','type','status'];
 
     public function table()
     {
@@ -21,9 +21,9 @@ class Order extends Model
         return $this->belongsTo(Restaurant::class);
     }
 
-    public function menuItems()
+    public function customer()
     {
-        return $this->belongsToMany(MenuItem::class)->withPivot('quantity', 'price');
+        return $this->belongsTo(Customer::class);
     }
 
     public function transactions()

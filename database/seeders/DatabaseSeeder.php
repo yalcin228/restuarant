@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\OrderType;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -23,6 +24,11 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
             'role'              => 'super-admin',
             'restaurant_id'     => null,
+        ]);
+
+        OrderType::insert([
+            ['name' => 'Table'],
+            ['name' => 'Online'],
         ]);
     }
 }

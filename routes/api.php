@@ -36,8 +36,13 @@ Route::middleware(['auth:sanctum', 'role:super-admin'])->group(function () {
 });
 
 Route::middleware(['auth:sanctum', 'check.end_date'])->group(function () {
-    //9. Tanımlar - Stok Qrup Tanımları:
     Route::middleware(['role:admin'])->group(function () {
+        //4. Sifarişlər:
+        Route::get('online-orders', [OrderController::class, 'getOnlineOrders']);
+        Route::get('table-orders', [OrderController::class, 'getTableOrders']);
+
+
+        //9. Tanımlar - Stok Qrup Tanımları:
         Route::apiResource('menus', MenuController::class);
         Route::apiResource('menu-items', MenuItemController::class);
         Route::post('menu-items/{id}/update', [MenuItemController::class, 'updateItem']);
@@ -72,7 +77,6 @@ Route::middleware(['auth:sanctum', 'check.end_date'])->group(function () {
 });
 
 Route::middleware(['auth:sanctum', 'role:staff'])->group(function () {
-    Route::apiResource('orders', OrderController::class);
     Route::apiResource('customers', CustomerController::class);
     Route::apiResource('transactions', TransactionController::class);
 });

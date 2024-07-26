@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\ApiResponserTrait;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\MenuItem;
@@ -9,7 +10,7 @@ use App\Models\MenuItem;
 
 class OrderController extends Controller
 {
-    //
+    use ApiResponserTrait;
     public function index()
     {
         return Order::with('menuItems')->get();
@@ -76,5 +77,10 @@ class OrderController extends Controller
         $order->delete();
 
         return response()->json(null, 204);
+    }
+
+    public function getOnlineOrders()
+    {
+        return Order::with('menuItems')->where('status', 'pending')->get();
     }
 }
