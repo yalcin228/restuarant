@@ -67,16 +67,18 @@ class MenuItemController extends Controller
             $filename = $request->has('photo') ? $this->ImageUpload($request->file('photo'), 'products/', "", "") : $item->photo;
 
             $item->update([
-                'name'              =>  $data['name'],
-                'photo'             => $filename,
-                'price'             =>  $data['price'],
-                'is_stock'          =>  $data['is_stock'],
-                'stock'             =>  $data['is_stock'] == 1 ? $data['stock'] : null,
-                'menu_id'           =>  $data['menu_id'],
-                'type'              =>  $data['type'],
-                'stock_tracking'    =>  $data['stock_tracking'],
-                'order_start_time'  =>  $data['order_start_time'],
-                'order_end_time'    =>  $data['order_end_time']
+                'name'                      =>  $data['name'],
+                'photo'                     =>  $filename,
+                'price'                     =>  $data['price'],
+                'is_stock'                  =>  $data['is_stock'],
+                'stock'                     =>  $data['is_stock'] == 1 ? $data['stock'] : null,
+                'type'                      =>  $data['is_stock'] == 1 ? $data['type'] : null,
+                'menu_id'                   =>  $data['menu_id'],
+                'is_stock_tracking'         =>  $data['is_stock_tracking'],
+                'stock_tracking_quantity'   =>  $data['is_stock_tracking'] == 1 ? $data['stock_tracking_quantity'] : null,
+                'show_qr'                   =>  $data['show_qr'],
+                'order_start_time'          =>  $data['order_start_time'],
+                'order_end_time'            =>  $data['order_end_time']
             ]);
             if ($data['is_stock'] == 1) {
                 if ($data['stock'] > $past_stock_count) {
@@ -100,6 +102,7 @@ class MenuItemController extends Controller
 
             return $this->successResponse($item, 200);
         } catch (\Exception $e) {
+            return $e;
             return $this->errorResponse('Menu item not successfully created!', 400);
         }
     }

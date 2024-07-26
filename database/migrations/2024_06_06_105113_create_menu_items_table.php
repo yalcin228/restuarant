@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Enums\ProductTypeEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,8 +19,10 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->integer('stock')->default(0)->nullable();
             $table->foreignId('menu_id');
-            $table->tinyInteger('type')->default(1)->comment('1:qr menu-da gosterilecek, 2:qr menu-da gosterilmeyecek');
-            $table->tinyInteger('stock_tracking')->default(2)->comment("1:Kritik miktar aktiv, 2:deaktiv");
+            $table->string('type')->nullable();
+            $table->tinyInteger('show_qr')->default(1)->comment('1:qr menu-da gosterilecek, 2:qr menu-da gosterilmeyecek');
+            $table->integer('stock_tracking_quantity')->nullable();
+            $table->tinyInteger('is_stock_tracking')->default(2)->comment("1:Kritik miktar aktiv, 2:deaktiv");
             $table->tinyInteger('is_stock')->default(1)->comment("1:Stoklu, 2:Stoksuz");
             $table->time('order_start_time');
             $table->time('order_end_time');
