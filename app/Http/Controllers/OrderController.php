@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateOnlineOrderRequest;
 use App\Http\Requests\CreateOrderRequest;
 use App\Http\Traits\ApiResponserTrait;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 use function PHPSTORM_META\map;
 
@@ -99,8 +102,43 @@ class OrderController extends Controller
         return $this->successResponse($orders, 200);
     }
 
-    public function createOrder(CreateOrderRequest $request)
+    public function createOnlineOrder(CreateOnlineOrderRequest $request)
     {
 
+        try {
+            DB::beginTransaction();
+            $data = $request->validated();
+        
+            $customer = Customer::create([
+                            'name'            => $data['name'],
+                            'phone'           => $data['phone'],
+                            'address'         => $data['address'],
+                            'note'            => $data['note'] ?? null,
+                            'restaurant_id'   => auth()->user()->restaurant_id,
+                        ]);
+
+            $order = Order::create([
+                'order_type_id'   => 2,
+                'customer_id'     => $customer->id,
+                'restaurant_id'   => auth()->user()->restaurant_id,
+                'total_price'     => 10,
+                'status'          => 'pending',
+            ]);
+
+            foreach ($data['menu_items'] as $menuItem) {
+                $order->menuItemOrders()->attach($menuItem['id'], [
+                    'quantity' => $menuItem['quantity'],
+                    'price' => $menuItem['price'],
+                ]);
+            }
+
+
+            DB::commit();
+            return $this->successResponse($order, 201);
+        } catch (\Exception $e) {
+            return $e;
+            DB::rollBack();
+            return $this->errorResponse('An error occurred. Please try again.', 400);
+        }
     }
 }
