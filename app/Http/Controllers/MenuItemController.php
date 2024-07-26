@@ -15,9 +15,8 @@ class MenuItemController extends Controller
     use ApiResponserTrait,ImageUpload;
     public function index()
     {
-        $items =  MenuItem::select("id","name","photo","price","stock","menu_id","type","stock_tracking","ordinal_number","order_start_time","order_end_time",'is_stock')
+        $items =  MenuItem::select("id","name","photo","price","stock","menu_id","type","stock_tracking","order_start_time","order_end_time",'is_stock')
                         ->with('menu:id,name')
-                        ->orderBy('ordinal_number')
                         ->get();
 
         return $this->successResponse(MenuItemResource::collection($items),200);
@@ -52,7 +51,7 @@ class MenuItemController extends Controller
 
     public function show(string $id)
     {
-        $menuItem = MenuItem::select("id","name","photo","price","stock","menu_id","type","stock_tracking","ordinal_number","order_start_time","order_end_time","is_stock")
+        $menuItem = MenuItem::select("id","name","photo","price","stock","menu_id","type","stock_tracking","order_start_time","order_end_time","is_stock")
                         ->where('id', $id)
                         ->first();
 
@@ -76,7 +75,6 @@ class MenuItemController extends Controller
                 'menu_id'           =>  $data['menu_id'],
                 'type'              =>  $data['type'],
                 'stock_tracking'    =>  $data['stock_tracking'],
-                'ordinal_number'    =>  $data['ordinal_number'],
                 'order_start_time'  =>  $data['order_start_time'],
                 'order_end_time'    =>  $data['order_end_time']
             ]);

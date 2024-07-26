@@ -25,7 +25,6 @@ class CreateMenuRequest extends FormRequest
             'name'           => 'required|string|max:255',
             'type'           => 'required|integer|in:1,2',
             'print'          => 'sometimes|integer|in:1,2',
-            'ordinal_number' => 'required|integer',
         ];
     }
 }

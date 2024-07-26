@@ -13,8 +13,7 @@ class MenuController extends Controller
     use ApiResponserTrait;
     public function index()
     {
-        $menus = Menu::select('id','name','type','print','ordinal_number')
-                    ->orderBy('ordinal_number')
+        $menus = Menu::select('id','name','type','print')
                     ->where('restaurant_id', auth()->user()->restaurant_id)
                     ->get();
 
@@ -38,7 +37,7 @@ class MenuController extends Controller
      */
     public function show(string $id)
     {
-        $menu = Menu::select('id','name','type','print','ordinal_number')
+        $menu = Menu::select('id','name','type','print')
                     ->where('restaurant_id', auth()->user()->restaurant_id)
                     ->where('id', $id)
                     ->first();

@@ -28,7 +28,6 @@ class CreateMenuItemRequest extends FormRequest
             'stock'             => 'required_if:is_stock,1|integer|min:0',
             'type'              => 'required|integer|in:1,2',
             'stock_tracking'    => 'required|in:1,2',
-            'ordinal_number'    => 'required|integer|min:1',
             'menu_id'           => 'required|exists:menus,id',
             'order_start_time'  => 'required|date_format:H:i',
             'order_end_time'    => 'required|date_format:H:i|after:order_start_time',

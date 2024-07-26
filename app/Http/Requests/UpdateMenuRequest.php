@@ -24,8 +24,7 @@ class UpdateMenuRequest extends FormRequest
         return [
             'name'           => 'required|string|max:255',
             'type'           => 'required|integer|in:1,2',
-            'print'          => 'sometimes|integer|in:1,2',
-            'ordinal_number' => 'required|integer',
+            'print'          => 'sometimes|integer|in:1,2'
         ];
     }
 }

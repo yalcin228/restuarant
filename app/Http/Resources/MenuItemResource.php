@@ -23,7 +23,6 @@ class MenuItemResource extends JsonResource
             'menu'              => $this->menu->name,
             'type'              => $this->type,
             'stock_tracking'    => $this->stock_tracking,
-            'ordinal_number'    => $this->ordinal_number,
             'order_start_time'  => $this->order_start_time,
             'order_end_time'    => $this->order_end_time
         ];

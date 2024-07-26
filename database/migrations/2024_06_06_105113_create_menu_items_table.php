@@ -21,7 +21,6 @@ return new class extends Migration
             $table->tinyInteger('type')->default(1)->comment('1:qr menu-da gosterilecek, 2:qr menu-da gosterilmeyecek');
             $table->tinyInteger('stock_tracking')->default(2)->comment("1:Kritik miktar aktiv, 2:deaktiv");
             $table->tinyInteger('is_stock')->default(1)->comment("1:Stoklu, 2:Stoksuz");
-            $table->integer('ordinal_number')->default(1);
             $table->time('order_start_time');
             $table->time('order_end_time');
             $table->timestamps();

@@ -14,8 +14,7 @@ class Menu extends Model
         'name',
         'restaurant_id',
         'type',
-        'print',
-        'ordinal_number',
+        'print'
     ];
 
     public function restaurant()
