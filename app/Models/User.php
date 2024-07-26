@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'permissions',
         'restaurant_id',
         'end_date'
     ];
@@ -44,5 +45,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'permissions' => 'array'
     ];
+
+    public function hasPermission(mixed $permission)
+    {
+        return in_array($permission, $this->permissions ?? []);
+    }
 }

@@ -35,27 +35,34 @@ Route::middleware(['auth:sanctum', 'role:super-admin'])->group(function () {
     Route::post('create-admin', [RestaurantController::class, 'createAdmin']);
 });
 
-Route::middleware(['auth:sanctum', 'role:admin', 'check.end_date'])->group(function () {
-    //Stok ve Grup tanimlari
-    Route::apiResource('menus', MenuController::class);
-    Route::apiResource('menu-items', MenuItemController::class);
-    Route::post('menu-items/{id}/update', [MenuItemController::class, 'updateItem']);
-    Route::post('menu-items/{id}/update-stock', [MenuItemController::class, 'updateStock']);
-    Route::post('menu-items/{id}/update-price', [MenuItemController::class, 'updatePrice']);
-    Route::post('menu-items/{id}/update-type', [MenuItemController::class, 'updateType']);
-    Route::get('menu-items/{id}/stock-histories', [MenuItemController::class, 'getStockHistories']);
-    Route::post('menu-items/{id}/stock-proccess', [MenuItemController::class, 'stockProccess']);
+Route::middleware(['auth:sanctum', 'check.end_date'])->group(function () {
+    //9. Tanımlar - Stok Qrup Tanımları:
+    Route::middleware(['role:admin'])->group(function () {
+        Route::apiResource('menus', MenuController::class);
+        Route::apiResource('menu-items', MenuItemController::class);
+        Route::post('menu-items/{id}/update', [MenuItemController::class, 'updateItem']);
+        Route::post('menu-items/{id}/update-stock', [MenuItemController::class, 'updateStock']);
+        Route::post('menu-items/{id}/update-price', [MenuItemController::class, 'updatePrice']);
+        Route::post('menu-items/{id}/update-type', [MenuItemController::class, 'updateType']);
+        Route::get('menu-items/{id}/stock-histories', [MenuItemController::class, 'getStockHistories']);
+        Route::post('menu-items/{id}/stock-proccess', [MenuItemController::class, 'stockProccess']);
+
+        //10. Tanımlar - Personel Tanımları:
+        Route::apiResource('staffs', StaffController::class);
+    });
+   
     
 
     //Masa tanimlari
-    Route::get('categories', [TableController::class, 'getCategories']);
-    Route::get('tables', [TableController::class, 'getTables']);
-    Route::post('table', [TableController::class, 'createTable']);
-    Route::put('table/{id}', [TableController::class, 'updateTable']);
-    Route::delete('table/{id}', [TableController::class, 'deleteTable']);
+    Route::middleware(['role:admin,staff','permission:manage-tables'])->group(function () {
+        Route::get('categories', [TableController::class, 'getCategories']);
+        Route::get('tables', [TableController::class, 'getTables']);
+        Route::post('table', [TableController::class, 'createTable']);
+        Route::put('table/{id}', [TableController::class, 'updateTable']);
+        Route::delete('table/{id}', [TableController::class, 'deleteTable']);
+    });
 
-
-
+   
 
 
     // Route::apiResource('tables', TableController::class);

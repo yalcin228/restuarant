@@ -2,59 +2,96 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateStaffRequest;
+use App\Http\Requests\UpdateStaffRequest;
+use App\Http\Traits\ApiResponserTrait;
 use Illuminate\Http\Request;
-use App\Models\Staff;
+use App\Models\User;
 
 class StaffController extends Controller
 {
-    //
+    use ApiResponserTrait;
 
     public function index()
     {
-        return Staff::all();
+        $staffs = User::where('role', 'staff')->get();
+
+        return $this->successResponse($staffs, 200);
     }
 
-    public function store(Request $request)
+    public function store(CreateStaffRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:staff',
-            'password' => 'required|string|min:8',
-            'restaurant_id' => 'required|exists:restaurants,id',
-        ]);
+        try {
+            $data = $request->validated();
 
-        $staff = Staff::create($request->all());
+            $staff = User::create([
+                'name'          => $data['name'],
+                'email'         => $data['email'],
+                'password'      => bcrypt($data['password']),
+                'role'          => $data['role'],
+                'restaurant_id' => auth()->user()->restaurant_id,
+                'end_date'      => auth()->user()->end_date,
+                'permissions'   => $data['permissions'],
+            ]);
 
-        return response()->json($staff, 201);
-    }
-
-    public function show(Staff $staff)
-    {
-        return $staff;
-    }
-
-    public function update(Request $request, Staff $staff)
-    {
-        $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|string|email|max:255|unique:staff,email,'.$staff->id,
-            'password' => 'sometimes|string|min:8',
-            'restaurant_id' => 'sometimes|exists:restaurants,id',
-        ]);
-
-        if ($request->has('password')) {
-            $staff->password = $request->password;
+            return $this->successResponse($staff, 201);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Staff not found!', 404);
         }
-
-        $staff->update($request->except('password'));
-
-        return response()->json($staff, 200);
     }
 
-    public function destroy(Staff $staff)
+    public function show(string $id)
     {
-        $staff->delete();
+        try {
+            $staff = User::where('id', $id)->where('role', 'staff')->firstOrFail();
+            return $this->successResponse($staff, 200);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Staff not found!', 404);
+        }
+    }
 
-        return response()->json(null, 204);
+    public function update(UpdateStaffRequest $request, string $id)
+    {
+        try {
+            $data = $request->validated();
+    
+            $staff = User::where('id', $id)
+                ->where('role', 'staff')
+                ->where('restaurant_id', auth()->user()->restaurant_id)
+                ->firstOrFail();
+
+            if ($request->has('password')) {
+                $staff->update([
+                    'name'          => $data['name'],
+                    'email'         => $data['email'],
+                    'password'      => bcrypt($request->password),
+                    'permissions'   => $data['permissions'] ?? $staff->permissions,
+                    'role'          => $data['role']
+                ]);
+            } else {
+                $staff->update([
+                    'name'          => $data['name'],
+                    'email'         => $data['email'],
+                    'permissions'   => $data['permissions'] ?? $staff->permissions,
+                    'role'          => $data['role']
+                ]);
+            }
+    
+            return $this->successResponse($staff, 200);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Staff not successfully updated!', 400);
+        }
+    }
+
+    public function destroy(string $id)
+    {
+        try {
+            $staff = User::findOrFail($id);
+            $staff->delete();
+    
+            return $this->successResponse('Staff deleted', 200);
+        } catch (\Throwable $th) {
+            return $this->errorResponse('Staff not successfully deleted!', 400);
+        }
     }
 }

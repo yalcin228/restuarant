@@ -19,7 +19,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->dateTime('end_date')->nullable();
-            $table->string('role');
+            $table->string('role')->comment('super-admin,admin,staff');
+            $table->json('permissions')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

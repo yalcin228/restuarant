@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'auth' => \App\Http\Middleware\Authenticate::class,
         'role' => \App\Http\Middleware\RoleMiddleware::class,
         'check.end_date' => \App\Http\Middleware\CheckUserEndDate::class,
+        'permission' => \App\Http\Middleware\CheckPermission::class,
     ];
 }
