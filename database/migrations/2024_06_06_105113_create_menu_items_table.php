@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('photo')->nullable();
             $table->decimal('price', 10, 2);
-            $table->integer('stock')->default(0)->nullable();
+            $table->integer('stock')->nullable();
             $table->foreignId('menu_id');
-            $table->string('type')->nullable();
+            $table->string('type')->nullable()->comment('adet,kq');
             $table->tinyInteger('show_qr')->default(1)->comment('1:qr menu-da gosterilecek, 2:qr menu-da gosterilmeyecek');
             $table->integer('stock_tracking_quantity')->nullable();
             $table->tinyInteger('is_stock_tracking')->default(2)->comment("1:Kritik miktar aktiv, 2:deaktiv");

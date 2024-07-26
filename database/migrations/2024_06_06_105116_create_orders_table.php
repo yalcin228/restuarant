@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_type_id');
             $table->foreignId('restaurant_id');
+            $table->foreignId('customer_id')->nullable();
             $table->decimal('total_price', 10, 2);
             $table->enum('status', ['pending', 'completed', 'cancelled']);
             $table->timestamps();

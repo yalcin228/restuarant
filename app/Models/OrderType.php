@@ -9,5 +9,10 @@ class OrderType extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['id','name'];
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

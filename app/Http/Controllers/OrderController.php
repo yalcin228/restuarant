@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateOrderRequest;
 use App\Http\Traits\ApiResponserTrait;
 use Illuminate\Http\Request;
 use App\Models\Order;
-use App\Models\MenuItem;
+use Illuminate\Support\Carbon;
 
+use function PHPSTORM_META\map;
 
 class OrderController extends Controller
 {
@@ -81,6 +83,24 @@ class OrderController extends Controller
 
     public function getOnlineOrders()
     {
-        return Order::with('menuItems')->where('status', 'pending')->get();
+        $orders =  Order::select('id','order_type_id','customer_id','total_price','status','created_at')
+                        ->with('customer:id,name,phone,address,note')
+                        ->where([
+                            'restaurant_id' => auth()->user()->restaurant_id,
+                            'status'        => 'pending',
+                        ])
+                        ->get()
+                        ->map(function ($order) {
+                            $order->time = Carbon::parse($order->created_at)->format('H:i');
+                            $order->time_since_order = $order->time_since_order;
+                            return $order;
+                        });
+
+        return $this->successResponse($orders, 200);
+    }
+
+    public function createOrder(CreateOrderRequest $request)
+    {
+
     }
 }

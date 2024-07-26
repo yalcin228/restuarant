@@ -39,7 +39,7 @@ Route::middleware(['auth:sanctum', 'check.end_date'])->group(function () {
     Route::middleware(['role:admin'])->group(function () {
         //4. Sifarişlər:
         Route::get('online-orders', [OrderController::class, 'getOnlineOrders']);
-        Route::get('table-orders', [OrderController::class, 'getTableOrders']);
+        Route::post('order', [OrderController::class, 'createOrder']);
 
 
         //9. Tanımlar - Stok Qrup Tanımları:
