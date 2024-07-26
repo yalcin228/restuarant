@@ -43,6 +43,8 @@ Route::middleware(['auth:sanctum', 'role:admin', 'check.end_date'])->group(funct
     Route::post('menu-items/{id}/update-stock', [MenuItemController::class, 'updateStock']);
     Route::post('menu-items/{id}/update-price', [MenuItemController::class, 'updatePrice']);
     Route::post('menu-items/{id}/update-type', [MenuItemController::class, 'updateType']);
+    Route::get('menu-items/{id}/stock-histories', [MenuItemController::class, 'getStockHistories']);
+    Route::post('menu-items/{id}/stock-proccess', [MenuItemController::class, 'stockProccess']);
     
 
     //Masa tanimlari

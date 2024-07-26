@@ -166,14 +166,65 @@ class MenuItemController extends Controller
     public function updateType(Request $request, $id)
     {   
         $request->validate([
-            'type' => 'required|integer|in:1,2',
+            'show_qr' => 'required|integer|in:1,2',
         ]);
 
         $item = MenuItem::findOrFail($id);
         $item->update([
-            'type' => $request->type
+            'show_qr' => $request->show_qr
         ]);
    
-        return $this->successResponse('Menu item type updated',200);
+        return $this->successResponse('Menu item show qr updated',200);
+    }
+
+    public function getStockHistories(string $id)
+    {
+        $item = MenuItem::findOrFail($id);
+        return $this->successResponse($item->stockHistories, 200);
+    }
+
+    public function stockProccess(Request $request,string $id)
+    {
+        try {
+            $request->validate([
+                'process'   => 'required|integer|in:1,2',
+                'quantity'  => 'required|integer|min:0',
+            ]);
+    
+            $item = MenuItem::findOrFail($id);
+            $past_stock_count = $item->stock;
+            if ($item->is_stock == 2) {
+                return $this->errorResponse('Item is not stockable', 404);
+            }
+
+            if ($request->process == 1) {
+                $item->stock += $request->quantity;
+
+                MenuItemStockHistory::create([
+                    'menu_item_id' => $item->id,
+                    'type' => 1,
+                    'quantity' => $request->quantity,
+                    'note' => ($request->quantity)." Adet stok miktar girişi"
+                ]);
+
+            } else if ($request->process == 2) {
+                if ($item->stock < $request->quantity) {
+                    return $this->errorResponse('Insufficient stock', 400);
+                }
+                $item->stock -= $request->quantity;
+                MenuItemStockHistory::create([
+                    'menu_item_id' => $item->id,
+                    'type' => 2,
+                    'quantity' =>  $request->quantity,
+                    'note' => ($request->quantity)." Adet stok miktar çıkışı"
+                ]);
+            }
+
+            $item->save();
+
+            return $this->successResponse($item, 200);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 400);
+        }
     }
 }
